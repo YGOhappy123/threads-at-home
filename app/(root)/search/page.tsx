@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs'
 import { getUserData, fetchUsers } from '@/lib/actions/user.actions'
 import UserCommunityCard from '@/components/cards/UserCommunityCard'
+import SearchBar from '@/components/layout/SearchBar'
+import Pagination from '@/components/layout/Pagination'
 
 interface IProps {
     searchParams: { [key: string]: string | undefined }
@@ -16,8 +18,8 @@ export default async function SearchPage({ searchParams }: IProps) {
 
     const { users, isNext } = await fetchUsers({
         userId: user.id,
-        searchTerm: '21',
-        page: 1,
+        searchTerm: searchParams.q,
+        page: searchParams?.page ? Number(searchParams.page) : 1,
         limit: 25,
         sortBy: 'desc'
     })
@@ -25,6 +27,8 @@ export default async function SearchPage({ searchParams }: IProps) {
     return (
         <section>
             <h1 className='head-text mb-10'>Search</h1>
+
+            <SearchBar routeType='search' />
 
             <div className='mt-14 flex flex-col gap-9'>
                 {users.length === 0 ? (
@@ -44,6 +48,12 @@ export default async function SearchPage({ searchParams }: IProps) {
                     </>
                 )}
             </div>
+
+            <Pagination
+                path='search'
+                currentPage={searchParams?.page ? Number(searchParams.page) : 1}
+                isNext={isNext}
+            />
         </section>
     )
 }

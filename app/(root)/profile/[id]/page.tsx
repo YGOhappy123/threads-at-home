@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs'
-import { getUserData } from '@/lib/actions/user.actions'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { getUserData } from '@/lib/actions/user.actions'
 import { PROFILE_TABS } from '@/constants'
 import Image from 'next/image'
 import ProfileHeader from '@/components/layout/ProfileHeader'

@@ -8,7 +8,7 @@ interface IProps {
     username: string
     imgUrl: string
     bio: string
-    type?: 'Community' | undefined
+    type?: 'User' | 'Community'
 }
 
 export default function ProfileHeader({

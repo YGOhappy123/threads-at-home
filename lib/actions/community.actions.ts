@@ -62,7 +62,7 @@ export const getCommunityThreads = async (communityId: string) => {
     try {
         await connectDB()
 
-        const communityPosts = await Community.findById(communityId).populate({
+        const communityPosts = await Community.findOne({ id: communityId }).populate({
             path: 'threads',
             populate: [
                 {

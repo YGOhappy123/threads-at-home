@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter, usePathname } from 'next/navigation'
+import { useOrganization } from '@clerk/nextjs'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Textarea } from '../ui/textarea'
@@ -24,6 +25,7 @@ interface IProps {
 export default function CreateThread({ userId }: IProps) {
     const router = useRouter()
     const pathname = usePathname()
+    const { organization } = useOrganization()
 
     const form = useForm<ThreadInput>({
         resolver: zodResolver(threadSchema),
@@ -37,7 +39,7 @@ export default function CreateThread({ userId }: IProps) {
         await createThread({
             content: values.thread,
             authorId: userId,
-            communityId: null,
+            communityId: organization ? organization.id : null,
             path: pathname
         })
 

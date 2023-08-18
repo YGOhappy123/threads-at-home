@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getUserThreads } from '@/lib/actions/user.actions'
+import { getCommunityThreads } from '@/lib/actions/community.actions'
 import ThreadCard from '../cards/ThreadCard'
 
 interface IProps {
@@ -37,7 +38,7 @@ interface IResult {
 
 export default async function ThreadsTab({ authUserId, targetId, type }: IProps) {
     const result: IResult =
-        type === 'User' ? await getUserThreads(targetId) : await getUserThreads(targetId)
+        type === 'User' ? await getUserThreads(targetId) : await getCommunityThreads(targetId)
 
     if (!result) redirect('/')
 
@@ -51,7 +52,8 @@ export default async function ThreadsTab({ authUserId, targetId, type }: IProps)
                     parentId={thread.parentId}
                     content={thread.content}
                     author={
-                        // If profile threads, display author's info, else display community's members info
+                        // If type === 'User', display target user's info
+                        // ...else display community's members info
                         type === 'User'
                             ? { name: result.name, image: result.image, id: result.id }
                             : {

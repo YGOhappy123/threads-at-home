@@ -22,10 +22,10 @@ export const getUserThreads = async (userId: string) => {
         const userWithThreads = await User.findOne({ id: userId }).populate({
             path: 'threads',
             populate: [
-                // {
-                //     path: 'community',
-                //     select: 'name id image _id'
-                // },
+                {
+                    path: 'community',
+                    select: 'name id image _id'
+                },
                 {
                     path: 'children',
                     populate: {

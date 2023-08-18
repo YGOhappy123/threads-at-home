@@ -1,11 +1,20 @@
 import { getAllThreads } from '@/lib/actions/thread.actions'
 import { currentUser } from '@clerk/nextjs'
 import ThreadCard from '@/components/cards/ThreadCard'
+import Pagination from '@/components/layout/Pagination'
 
-export default async function HomePage() {
-    const { threads, isNext } = await getAllThreads()
+interface IProps {
+    searchParams: { [key: string]: string | undefined }
+}
+
+export default async function HomePage({ searchParams }: IProps) {
     const user = await currentUser()
     if (!user) return null
+
+    const { threads, isNext } = await getAllThreads(
+        searchParams?.page ? Number(searchParams.page) : 1,
+        20
+    )
 
     return (
         <>
@@ -31,6 +40,12 @@ export default async function HomePage() {
                     </>
                 )}
             </section>
+
+            <Pagination
+                path=''
+                currentPage={searchParams?.page ? Number(searchParams.page) : 1}
+                isNext={isNext}
+            />
         </>
     )
 }

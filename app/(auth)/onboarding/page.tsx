@@ -1,12 +1,15 @@
-import AccountProfile from '@/components/form/AccountProfile'
+import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs'
+import { getUserData } from '@/lib/actions/user.actions'
+import AccountProfile from '@/components/form/AccountProfile'
 
 export default async function onboardingPage() {
     const clerkUserData = await currentUser()
-    // const userInfo = await fetchUser(user.id);
-    // if (userInfo?.onboarded) redirect("/");
+    if (!clerkUserData) return null
 
-    const dbUserData = {} as any
+    const dbUserData = await getUserData(clerkUserData.id)
+    if (dbUserData?.onboarded) redirect('/')
+
     const userData = {
         id: clerkUserData?.id,
         objectId: dbUserData?._id,

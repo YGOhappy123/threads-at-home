@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { connectDB } from '../mongoose'
 import Thread from '../models/Thread'
 import User from '../models/User'
+import Community from '../models/Community'
 
 export const getAllThreads = async (page: number = 1, limit: number = 20) => {
     try {
@@ -18,7 +19,7 @@ export const getAllThreads = async (page: number = 1, limit: number = 20) => {
             .limit(limit)
             .populate([
                 'author',
-                // 'community',
+                'community',
                 {
                     path: 'children',
                     populate: {
@@ -48,10 +49,10 @@ export const getThreadById = async (id: string) => {
                 path: 'author',
                 select: '_id id name image'
             },
-            // {
-            //     path: 'community',
-            //     select: '_id id name image'
-            // },
+            {
+                path: 'community',
+                select: '_id id name image'
+            },
             {
                 path: 'children',
                 populate: [
@@ -91,15 +92,21 @@ export const createThread = async ({
     try {
         await connectDB()
 
+        const matchingCommunity = await Community.findOne({ id: communityId })
         const newThread = await Thread.create({
             content,
             author: authorId,
-            community: communityId
+            community: matchingCommunity?._id || null
         })
 
         await User.findByIdAndUpdate(authorId, {
             $push: { threads: newThread._id }
         })
+
+        if (matchingCommunity) {
+            matchingCommunity.threads.push(newThread._id)
+            await matchingCommunity.save()
+        }
 
         revalidatePath(path)
     } catch (err: any) {

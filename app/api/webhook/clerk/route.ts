@@ -57,7 +57,6 @@ export const POST = async (request: Request) => {
     // Listen organization creation event
     if (eventType === 'organization.created') {
         // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/CreateOrganization
-        // Show what evnt?.data sends from above resource
         const { id, name, slug, logo_url, image_url, created_by } = evnt?.data ?? {}
 
         try {
@@ -68,14 +67,14 @@ export const POST = async (request: Request) => {
                 name,
                 slug,
                 logo_url || image_url,
-                'org bio',
+                "Let's edit your community bio!",
                 created_by
             )
 
-            return NextResponse.json({ message: 'User created' }, { status: 201 })
+            return NextResponse.json({ message: 'Community created' }, { status: 201 })
         } catch (err) {
             console.log(err)
-            return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 })
+            return NextResponse.json({ message: 'Error creating community' }, { status: 500 })
         }
     }
 

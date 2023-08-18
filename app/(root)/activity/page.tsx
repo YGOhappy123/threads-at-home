@@ -24,7 +24,7 @@ export default async function ActivityPage() {
                     <>
                         {activities.map((activity) => (
                             <Link key={activity._id} href={`/thread/${activity.parentId}`}>
-                                <article className='activity-card'>
+                                <article className='flex items-center gap-2 rounded-md bg-dark-2 px-7 py-4'>
                                     <Image
                                         src={activity.author.image}
                                         alt='user_logo'
